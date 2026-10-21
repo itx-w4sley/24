@@ -1,0 +1,2 @@
+import {guard,json,failure} from '@/lib/api';import {getDb,serialize} from '@/lib/db';
+export async function GET(req){try{const g=await guard(req);if(g.error)return g.error;const db=await getDb();const query=g.user.role==='admin'?{}:g.user.role==='designer'?{assignedTo:g.user._id}:{ownerId:g.user._id};const items=await db.collection('commissions').find(query).sort({createdAt:-1}).limit(250).toArray();return json({items:serialize(items)});}catch(e){return failure(e);}}

@@ -1,0 +1,25 @@
+CREATIVE STUDIO 5.0 — VALIDATION REPORT
+============================================
+
+PASS  — 84 JavaScript/JSX/MJS source files parsed successfully (before removing unused prototype modules).
+PASS  — All @/ import paths resolved to source files.
+PASS  — npm run check: 33 legacy portfolio entries and 11 critical files.
+PASS  — Node syntax check on backend/helper scripts.
+PASS  — No real MongoDB URI or .env.local bundled.
+PASS  — Responsive styles and accessibility focus/reduced-motion rules included.
+
+NOT RUN — npm install / npm run build / browser E2E tests.
+Reason: npm registry DNS is unavailable in this working environment.
+These steps must be completed on a machine with internet access before production deployment.
+
+EXTERNAL SETUP REQUIRED:
+- MongoDB Atlas cluster and user, URI and network access rules
+- SESSION_SECRET and initial admin credentials
+- npm install then npm run setup
+- Own original images copied to public/assets
+- Optional Cloudinary/Discord/Resend credentials
+- Security and policies reviewed before using the system with real clients
+
+LIMITATIONS: No payment processing, verified-email flow, email password recovery,
+full drag-and-drop visual page builder, or private Cloudinary delivery automation.
+See README.md for safer usage and deployment steps.

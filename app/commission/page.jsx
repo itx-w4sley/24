@@ -1,0 +1,3 @@
+import Link from 'next/link';import {ShieldCheck} from 'lucide-react';import {StudioForm} from '@/components/StudioForms';
+export const metadata={title:'Request a commission'};
+export default function Commission(){return <><div className="page-heading"><div className="eyebrow">NEW PROJECT / CREATIVE BRIEF</div><h1>Let's make it happen<span className="gradient-text">.</span></h1><p>Tell me what you have in mind. This request starts a conversation—it isn't a payment or binding booking. I'll review the details before quoting.</p></div><StudioForm/><p className="hint" style={{marginTop:19}}>Already working with the studio? <Link href="/portal" className="text-link">Open your client workspace ↗</Link></p></>}

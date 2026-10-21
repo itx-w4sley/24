@@ -1,0 +1,2 @@
+import {redirect} from 'next/navigation';import {currentUser} from '@/lib/auth';import StudioAdmin from '@/components/StudioAdmin';export const metadata={title:'Studio admin',robots:{index:false}};export const dynamic='force-dynamic';
+export default async function Admin(){const user=await currentUser();if(!user)redirect('/login?next=/admin');if(!['admin','designer'].includes(user.role))redirect('/portal');return <StudioAdmin user={user}/>}

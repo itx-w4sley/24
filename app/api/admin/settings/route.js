@@ -1,0 +1,4 @@
+import {guard,json,readJson,cleanText,failure,audit} from '@/lib/api';import {getDb} from '@/lib/db';
+const names=['studioName','tagline','about','contactEmail','discordUrl','availability','accent','heroTitle','heroSubtitle','announcement'];
+export async function GET(req){try{const g=await guard(req,{staff:true});if(g.error)return g.error;const db=await getDb();return json({values:(await db.collection('settings').findOne({_id:'public'}))||{}});}catch(e){return failure(e);}}
+export async function PATCH(req){try{const g=await guard(req);if(g.error)return g.error;if(g.user.role!=='admin')return json({error:'Forbidden'},403);const v=await readJson(req);const clean={};names.forEach(k=>{if(k in v)clean[k]=cleanText(v[k],k==='about'?2500:400)});const db=await getDb();await db.collection('settings').updateOne({_id:'public'},{$set:{...clean,updatedAt:new Date()}},{upsert:true});await audit(g.user,'update','settings');return json({ok:true});}catch(e){return failure(e);}}

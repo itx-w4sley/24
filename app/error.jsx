@@ -1,0 +1,1 @@
+'use client';export default function Error({reset}){return <div className="page-heading"><div className="eyebrow">UNEXPECTED ERROR</div><h1>Something interrupted the studio.</h1><p>Try loading the page again.</p><button className="button button-primary" onClick={()=>reset()}>Retry</button></div>}

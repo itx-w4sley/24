@@ -1,0 +1,1 @@
+import Link from 'next/link';export default function NotFound(){return <div className="page-heading" style={{padding:'100px 0'}}><span className="eyebrow">404 / NOTHING HERE</span><h1>Wrong turn<span className="gradient-text">.</span></h1><p>This page doesn't exist or has been moved.</p><Link href="/" className="button button-primary">Back to the studio</Link></div>}

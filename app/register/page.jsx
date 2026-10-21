@@ -1,0 +1,1 @@
+import {Suspense} from 'react';import AuthForm from '@/components/AuthForm';export const metadata={title:'Create an account'};export default function Register(){return <Suspense fallback={<div className="empty-state">Loading...</div>}><AuthForm register/></Suspense>}

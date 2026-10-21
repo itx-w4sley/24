@@ -1,0 +1,2 @@
+import {guard,json,readJson,cleanText,failure,audit} from '@/lib/api';import {getDb} from '@/lib/db';import {ObjectId} from 'mongodb';
+export async function PATCH(req){try{const g=await guard(req);if(g.error)return g.error;const {name}=await readJson(req);if(!name||String(name).trim().length<2)return json({error:'Enter a valid name'},400);const db=await getDb();await db.collection('users').updateOne({_id:new ObjectId(g.user._id)},{$set:{name:cleanText(name,120),updatedAt:new Date()}});await audit(g.user,'profile','users');return json({ok:true});}catch(e){return failure(e);}}

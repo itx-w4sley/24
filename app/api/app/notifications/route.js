@@ -1,0 +1,3 @@
+import {guard,json,readJson,failure} from '@/lib/api';import {getDb,serialize} from '@/lib/db';import {ObjectId} from 'mongodb';
+export async function GET(req){try{const g=await guard(req);if(g.error)return g.error;const db=await getDb();return json({items:serialize(await db.collection('notifications').find({userId:g.user._id}).sort({createdAt:-1}).limit(80).toArray())});}catch(e){return failure(e);}}
+export async function PATCH(req){try{const g=await guard(req);if(g.error)return g.error;const {id}=await readJson(req);const db=await getDb();const q={userId:g.user._id};if(id&&ObjectId.isValid(id))q._id=new ObjectId(id);await db.collection('notifications').updateMany(q,{$set:{read:true}});return json({ok:true});}catch(e){return failure(e);}}

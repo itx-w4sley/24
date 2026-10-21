@@ -1,0 +1,4 @@
+export const dynamic='force-dynamic';
+import Link from 'next/link';import {notFound} from 'next/navigation';import {ArrowLeft} from 'lucide-react';import {publicItems} from '@/lib/content';
+export async function generateMetadata({params}){const {key}=await params;const p=(await publicItems('pageContent')).find(x=>x.key===key);return {title:p?.title||'Studio page'}}
+export default async function Page({params}){const {key}=await params;const p=(await publicItems('pageContent')).find(x=>x.key===key);if(!p)notFound();return <article className="article"><Link href="/resources" className="text-link"><ArrowLeft size={14}/> Back to resources</Link><div className="page-heading" style={{marginTop:35}}><div className="eyebrow">STUDIO RESOURCES</div><h1>{p.title||p.key}</h1></div><div className="surface article-body">{p.body}</div></article>}

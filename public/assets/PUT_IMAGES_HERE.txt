@@ -1,0 +1,10 @@
+Drop your original portfolio PNGs from Creative Studio 4.0 into this folder.
+The filenames are case-sensitive on Vercel/Linux.
+
+The 33 original artwork references are preserved in lib/projects.js.
+Example: public/assets/banner1.png
+Example: public/assets/TechuraSolutionsC2_Dashboard.png
+Example: public/assets/Port (1).png
+
+Images are not bundled because the original images were not supplied with the HTML source.
+The website shows branded artwork placeholder tiles until their files exist.
