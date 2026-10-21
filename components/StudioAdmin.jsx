@@ -19,7 +19,34 @@ function Tag({status}){const s=String(status||'draft');return <span className={'
 function Field({field,value,onChange}){const [key,label,type='text',required=false]=field;const basic={id:'edit-'+key,name:key,value:value??'',onChange:e=>onChange(key,e.target.value),required};if(type==='checkbox')return <div className="field"><label htmlFor={'edit-'+key} className="hstack"><input type="checkbox" id={'edit-'+key} checked={!!value} onChange={e=>onChange(key,e.target.checked)} style={{width:'auto',minHeight:0}}/>{label}</label></div>;if(type==='textarea')return <div className="field span-all"><label htmlFor={'edit-'+key}>{label}</label><textarea {...basic} rows={key==='body'?6:3}/></div>;if(statuses[type])return <div className="field"><label htmlFor={'edit-'+key}>{label}</label><select {...basic}><option value="">Select...</option>{statuses[type].map(s=><option value={s} key={s}>{s.replaceAll('_',' ')}</option>)}</select></div>;return <div className="field"><label htmlFor={'edit-'+key}>{label}</label><input {...basic} type={type==='number'?'number':type==='url'?'text':'text'}/></div>}
 export default function StudioAdmin({user}){
  const allowed=roleTab[user.role]||[],[tab,setTab]=useState('overview'),[items,setItems]=useState({}),[analytics,setAnalytics]=useState(null),[alerts,setAlerts]=useState([]),[settings,setSettings]=useState(null),[loading,setLoading]=useState(false),[error,setError]=useState(''),[success,setSuccess]=useState(''),[edit,setEdit]=useState(null),[values,setValues]=useState({}),[uploading,setUploading]=useState(false),[order,setOrder]=useState(null),[messages,setMessages]=useState([]),[message,setMessage]=useState(''),[newUser,setNewUser]=useState({name:'',email:'',role:'designer',password:''});
- const load=useCallback(async(resource=tab)=>{setLoading(true);setError('');try{if(resource==='overview'){setAnalytics(await api('/api/admin/analytics'));try{setAlerts((await api('/api/app/notifications')).items)}catch{}return}if(resource==='settings'){setSettings((await api('/api/admin/settings')).values);return}if(resource==='users'){setItems(v=>({...v,users:(await api('/api/admin/users')).items}));return}setItems(v=>({...v,[resource]:(await api('/api/admin/'+resource)).items}))}catch(e){setError(e.message)}finally{setLoading(false)}},[tab]);
+ const load=useCallback(async (resource=tab)=>{
+  setLoading(true);
+  setError('');
+  try {
+    if(resource==='overview'){
+      const dashboard=await api('/api/admin/analytics');
+      setAnalytics(dashboard);
+      try {
+        const notifications=await api('/api/app/notifications');
+        setAlerts(notifications.items||[]);
+      } catch { setAlerts([]); }
+      return;
+    }
+    if(resource==='settings'){
+      const response=await api('/api/admin/settings');
+      setSettings(response.values);
+      return;
+    }
+    // Async requests must resolve before entering React's synchronous state updater.
+    const endpoint=resource==='users'?'/api/admin/users':'/api/admin/'+resource;
+    const response=await api(endpoint);
+    setItems(previous=>({...previous,[resource]:response.items||[]}));
+  }catch(e){
+    setError(e.message);
+  }finally{
+    setLoading(false);
+  }
+ },[tab]);
  useEffect(()=>{load(tab)},[tab,load]);
  const changeTab=k=>{setTab(k);setEdit(null);setOrder(null);setError('');setSuccess('')};
  const update=(k,v)=>setValues(old=>({...old,[k]:v}));
