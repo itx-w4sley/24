@@ -13,7 +13,7 @@ export async function POST(req){try{
   const requestDetails={};
   for(const key of detailKeys){if(raw[key]!=null)requestDetails[key]=cleanText(raw[key],key==='otherFeatures'?600:key==='references'||key==='deliverables'?450:key==='platform'?300:120);}
   if(Array.isArray(raw.features))requestDetails.features=raw.features.slice(0,12).map(x=>cleanText(x,100)).filter(Boolean);
-  const doc={name,email,title,description,type,requestDetails,budget:cleanText(v.budget,80),deadline:cleanText(v.deadline,30),ownerId:existingUser?String(existingUser._id):null,status:'new',priority:'normal',price:0,currency:'AUD',progress:0,createdAt:new Date(),updatedAt:new Date()};
+  const doc={name,email,title,description,type,requestDetails,budget:cleanText(v.budget,80),deadline:cleanText(v.deadline,30),ownerId:existingUser?String(existingUser._id):null,status:'new',priority:'normal',price:0,currency:'ROBUX',progress:0,createdAt:new Date(),updatedAt:new Date()};
   const created=await db.collection('commissions').insertOne(doc);
   await notify({userId:existingUser?._id,title:'Commission received',body:`Your request “${title}” has been submitted.`,link:'/portal'});
   await notifyStaff('New commission',`${name} requested ${title}.`,'/admin');
