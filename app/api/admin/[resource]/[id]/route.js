@@ -5,6 +5,14 @@ export async function PATCH(req,{params}){try{
   const change=normalizeResource(resource,await readJson(req),true);if(!Object.keys(change).length)return json({error:'No updates'},400);
   const db=await getDb();const _id=safeId(id);const original=await db.collection(resource).findOne({_id});if(!original)return json({error:'Not found'},404);
   if(resource==='commissions'&&g.user.role==='designer'&&original.assignedTo&&original.assignedTo!==g.user._id)return json({error:'Not assigned to you'},403);
+  if(resource==='commissions'&&Object.prototype.hasOwnProperty.call(change,'ownerId')){
+    if(g.user.role!=='admin')return json({error:'Admin permission required to assign client'},403);
+    if(change.ownerId){
+      if(!/^[a-f\d]{24}$/i.test(change.ownerId))return json({error:'Invalid client user ID'},400);
+      const u=await db.collection('users').findOne({_id:safeId(change.ownerId)});
+      if(!u||u.role!=='client'||u.active===false)return json({error:'Client account not found or disabled'},400);
+    }
+  }
   if(resource==='commissions'&&('status'in change||'downloadUrl'in change)){
     await notify({userId:original.ownerId,title:'Your commission was updated',body:`${original.title} — ${change.status||original.status}`,link:'/portal',email:original.email});
   }
