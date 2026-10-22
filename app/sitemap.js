@@ -1,1 +1,1 @@
-export default function sitemap(){const base=process.env.SITE_URL||'http://localhost:3000';return ['/','/portfolio','/services','/news','/about','/contact','/commission'].map(u=>({url:base+u,lastModified:new Date(),changeFrequency:'weekly',priority:u==='/'?1:.7}))}
+export default function sitemap(){const base=process.env.SITE_URL||'http://localhost:3000';return ['/','/portfolio','/packages','/activity','/services','/news','/about','/contact','/commission','/start','/support'].map(u=>({url:base+u,lastModified:new Date(),changeFrequency:'weekly',priority:u==='/'?1:.7}))}
