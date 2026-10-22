@@ -7,7 +7,7 @@ export default async function Admin({searchParams}){
   const params=await searchParams;
   const tab=typeof params?.tab==='string'?params.tab:'overview';
   const user=await currentUser();
-  if(!user)redirect('/login?next='+encodeURIComponent('/admin?tab='+encodeURIComponent(tab)));
-  if(!['admin','designer'].includes(user.role))redirect('/portal');
+  if(!user)redirect('/401?next='+encodeURIComponent('/admin?tab='+encodeURIComponent(tab)));
+  if(!['admin','designer'].includes(user.role))redirect('/403');
   return <StudioAdmin user={user} initialTab={tab}/>;
 }

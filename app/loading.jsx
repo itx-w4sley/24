@@ -1,1 +1,2 @@
-export default function Loading(){return <div className="surface" style={{minHeight:250,display:'grid',placeItems:'center'}}><span className="eyebrow">LOADING THE STUDIO...</span></div>}
+import RecoveryLoading from '@/components/RecoveryLoading';
+export default function Loading(){return <RecoveryLoading label="Opening Creative Studio\u2026" detail="Loading your creative workspace."/>;}

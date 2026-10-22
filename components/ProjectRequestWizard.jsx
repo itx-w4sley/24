@@ -110,9 +110,9 @@ export default function ProjectRequestWizard(){
       };
       const res=await fetch('/api/public/commission',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       const data=await res.json();
-      if(!res.ok)throw new Error(data.error||'Unable to submit the request. Please try again.');
+      if(!res.ok){const e=new Error(data.error||'Unable to submit the request. Please try again.');e.status=res.status;throw e;}
       setResult({id:data.id||'',title:values.title,linked:!!user&&user.email?.toLowerCase()===values.email?.trim().toLowerCase()});
-    }catch(err){setError(err.message||'Unable to submit your request.');}
+    }catch(err){setError((err.message||'Unable to submit your request.')+(err.status===429?' Rate limit help: /429':err.status===503?' The database may be unavailable. Check /database-unavailable.':''));}
     finally{setLoading(false);}
   };
   const service=SERVICES.find(s=>s.value===values.type);
@@ -131,7 +131,7 @@ export default function ProjectRequestWizard(){
         <div className="wizard-progress-top"><div className="eyebrow">PROJECT REQUEST</div><span className="micro-label">STEP {String(step+1).padStart(2,'0')} / {String(STEPS.length).padStart(2,'0')}</span></div>
         <div className="request-meter" role="progressbar" aria-label="Project brief completion" aria-valuenow={step+1} aria-valuemin={1} aria-valuemax={STEPS.length}><span style={{width:`${(step+1)/STEPS.length*100}%`}}/></div>
         <div className="wizard-progress request-progress" aria-label="Project request steps">{STEPS.map((label,index)=><div className={'wizard-progress-item '+(step===index?'current':step>index?'done':'')} key={label} aria-current={step===index?'step':undefined}><span>{step>index?<CheckCircle2 size={15}/>:String(index+1).padStart(2,'0')}</span><small>{label}</small></div>)}</div>
-        {error&&<p className="form-error" role="alert" style={{margin:'15px 0'}}>{error}</p>}
+        {error&&<p className="form-error" role="alert" style={{margin:'15px 0'}}>{error} {error.includes("/429")&&<Link href="/429?next=/start" className="text-link">Rate-limit details →</Link>} {error.includes("/database-unavailable")&&<Link href="/database-unavailable?next=/start" className="text-link">Database help →</Link>}</p>}
 
         {step===0&&<section aria-label="Choose a service"><div className="eyebrow">01 / THE SERVICE</div><h2>What can we create for you?</h2><p className="hint">Select one primary service. You can describe connected work in the brief.</p><div className="wizard-service-grid">{SERVICES.map(({value,label,description,Icon})=><button key={value} type="button" aria-pressed={values.type===value} className={'wizard-service '+(values.type===value?'active':'')} onClick={()=>selectService(value)}><span className="round-icon"><Icon size={20}/></span><strong>{label}</strong><span>{description}</span>{values.type===value&&<CheckCircle2 className="wizard-selected" size={17}/>}</button>)}</div></section>}
 

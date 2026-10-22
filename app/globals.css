@@ -171,3 +171,12 @@ html[data-effects='off'] .ambient,html[data-effects='off'] .grain{display:none}
 .request-progress .wizard-progress-item span{height:30px;min-width:30px}
 @media(max-width:700px){.request-feature-grid{grid-template-columns:1fr}.request-progress{gap:2px}.request-progress .wizard-progress-item small{font-size:8px}.request-progress .wizard-progress-item span{height:26px;min-width:26px}}
 @media(max-width:440px){.request-progress .wizard-progress-item small{font-size:7px}.request-progress .wizard-progress-item span{min-width:22px;height:24px;font-size:10px}}
+
+/* Studio 5.4 recovery loading indicators */
+.studio-loading-spin{color:var(--accent);animation:studio-loading-rotate 1.25s linear infinite;flex-shrink:0}
+.studio-loading-skeleton{display:grid;gap:12px;max-width:640px}
+.studio-loading-skeleton span{display:block;height:17px;border-radius:9px;background:linear-gradient(90deg,var(--panel2),var(--accentsoft),var(--panel2));background-size:200% 100%;animation:studio-loading-shimmer 1.8s ease-in-out infinite}
+.studio-loading-skeleton span:nth-child(2){width:83%}.studio-loading-skeleton span:nth-child(3){width:58%}
+@keyframes studio-loading-rotate{to{transform:rotate(360deg)}}
+@keyframes studio-loading-shimmer{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.studio-loading-spin,.studio-loading-skeleton span{animation:none}}

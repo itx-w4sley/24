@@ -4,6 +4,7 @@ import {usePathname,useRouter} from 'next/navigation';
 import Link from 'next/link';
 import {Aperture,LayoutDashboard,Grid2X2,Layers3,Newspaper,Download,UserRound,Mail,BriefcaseBusiness,LogIn,Menu,X,Search,Command,Moon,Sun,ArrowUpRight,Headphones,Pause,Play,SkipForward,Shield,LogOut,Sparkles,Volume2,VolumeX,Heart,Settings2,PanelTop,Keyboard,Users,ChevronRight,Palette,Activity,Headset} from 'lucide-react';
 import {BASE_SITE} from '@/lib/site';
+import ConnectivityNotice from './ConnectivityNotice';
 const NAV=[['/','Overview',LayoutDashboard],['/portfolio','Selected works',Grid2X2],['/services','What I do',Layers3],['/packages','Packages & pricing',BriefcaseBusiness],['/activity','Studio updates',Activity],['/news','Studio journal',Newspaper],['/resources','Resources',Download],['/about','About me',UserRound],['/support','Support centre',Headset],['/contact','Contact',Mail]];
 const tracks=[{name:'Open Arms',url:'https://itxw4sley-portfolio.vercel.app/assets/openarms.mp3'},{name:'Saturn',url:'https://itxw4sley-portfolio.vercel.app/assets/saturn.mp3'}];
 export default function SiteShell({children}){
@@ -20,9 +21,10 @@ export default function SiteShell({children}){
  const commands=[...NAV,['/start','Start a project',BriefcaseBusiness],['/commission','New commission',BriefcaseBusiness],['/portal','Client portal',Users],['/admin','Administration',Shield]];
  const shown=commands.filter(c=>c[1].toLowerCase().includes(query.toLowerCase())||c[0].includes(query.toLowerCase()));
  return <div className="app-shell">
+  <ConnectivityNotice/>
   <div className="grain" aria-hidden="true"/><div className="ambient ambient-a" aria-hidden="true"/><div className="ambient ambient-b" aria-hidden="true"/>
   <aside className={'sidebar '+(menu?'sidebar-open':'')}>
-   <Link className="brand" href="/" onClick={()=>setMenu(false)}><span className="brand-icon"><Aperture size={21}/></span><span><strong>24xzvibx</strong><small>CREATIVE STUDIO <b>5.2</b></small></span></Link>
+   <Link className="brand" href="/" onClick={()=>setMenu(false)}><span className="brand-icon"><Aperture size={21}/></span><span><strong>24xzvibx</strong><small>CREATIVE STUDIO <b>5.4</b></small></span></Link>
    <div className="sidebar-section">EXPLORE</div>
    <nav className="sidebar-nav">{NAV.map(([url,name,Icon])=><Link key={url} href={url} onClick={()=>setMenu(false)} className={'nav-link '+(path===url||(url!=='/'&&path.startsWith(url+'/'))?'nav-active':'')}><Icon size={18}/><span>{name}</span>{path===url&&<span className="nav-dot"/>}</Link>)}</nav>
    <div className="sidebar-section" style={{marginTop:24}}>WORKSPACE</div>
