@@ -2,9 +2,9 @@
 import {useState,useEffect,useCallback} from 'react';
 import {usePathname,useRouter} from 'next/navigation';
 import Link from 'next/link';
-import {Aperture,LayoutDashboard,Grid2X2,Layers3,Newspaper,Download,UserRound,Mail,BriefcaseBusiness,LogIn,Menu,X,Search,Command,Moon,Sun,ArrowUpRight,Headphones,Pause,Play,SkipForward,Shield,LogOut,Sparkles,Volume2,VolumeX,Heart,Settings2,PanelTop,Keyboard,Users,ChevronRight,Palette,Activity} from 'lucide-react';
+import {Aperture,LayoutDashboard,Grid2X2,Layers3,Newspaper,Download,UserRound,Mail,BriefcaseBusiness,LogIn,Menu,X,Search,Command,Moon,Sun,ArrowUpRight,Headphones,Pause,Play,SkipForward,Shield,LogOut,Sparkles,Volume2,VolumeX,Heart,Settings2,PanelTop,Keyboard,Users,ChevronRight,Palette} from 'lucide-react';
 import {BASE_SITE} from '@/lib/site';
-const NAV=[['/','Overview',LayoutDashboard],['/portfolio','Selected works',Grid2X2],['/services','What I do',Layers3],['/packages','Packages & pricing',BriefcaseBusiness],['/activity','Studio updates',Activity],['/news','Studio journal',Newspaper],['/resources','Resources',Download],['/about','About me',UserRound],['/contact','Contact',Mail]];
+const NAV=[['/','Overview',LayoutDashboard],['/portfolio','Selected works',Grid2X2],['/services','What I do',Layers3],['/news','Studio journal',Newspaper],['/resources','Resources',Download],['/about','About me',UserRound],['/contact','Contact',Mail]];
 const tracks=[{name:'Open Arms',url:'https://itxw4sley-portfolio.vercel.app/assets/openarms.mp3'},{name:'Saturn',url:'https://itxw4sley-portfolio.vercel.app/assets/saturn.mp3'}];
 export default function SiteShell({children}){
  const path=usePathname(),router=useRouter();
