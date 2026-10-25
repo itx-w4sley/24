@@ -1,0 +1,45 @@
+/* Studio Admin sign-out: local CSS Module (no globals.css edits required). */
+.accountActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
+}
+
+.signOut {
+  flex: 0 0 38px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.signOut:hover:not(:disabled),
+.signOut:focus-visible {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--panel);
+}
+
+.signOut:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.signOut:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
+.spinner {
+  animation: studioLogoutSpin 1s linear infinite;
+}
+
+@keyframes studioLogoutSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+  .signOut { transition: none; }
+}

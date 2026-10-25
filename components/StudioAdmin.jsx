@@ -1,5 +1,6 @@
 'use client';
-import {useState,useEffect,useCallback} from 'react';import Link from 'next/link';import {BarChart3,FolderOpen,Newspaper,Layers3,MessageSquare,Star,Image,Users,Bell,Settings,FilePenLine,Mail,ShieldCheck,Plus,RefreshCw,Trash2,Edit3,Save,X,UploadCloud,Download,Send,ExternalLink,Copy,Activity,Eye,FileJson,CheckCircle2,AlertTriangle,ArrowRight,LockKeyhole,Headset} from 'lucide-react';
+import {useState,useEffect,useCallback} from 'react';import Link from 'next/link';import {BarChart3,FolderOpen,Newspaper,Layers3,MessageSquare,Star,Image,Users,Bell,Settings,FilePenLine,Mail,ShieldCheck,Plus,RefreshCw,Trash2,Edit3,Save,X,UploadCloud,Download,Send,ExternalLink,Copy,Activity,Eye,FileJson,CheckCircle2,AlertTriangle,ArrowRight,LockKeyhole,Headset,LogOut,LoaderCircle} from 'lucide-react';
+import logoutStyles from './StudioAdminLogout.module.css';
 import {formatDate,money} from '@/lib/site';import ProjectUpdates from './ProjectUpdates';import SupportDeskAdmin from './SupportDeskAdmin';import MaintenanceControl from './MaintenanceControl';
 const TABS=[['overview','Overview',BarChart3],['commissions','Commissions',FolderOpen],['tickets','Support tickets',Headset],['projects','Portfolio',Image],['news','Journal',Newspaper],['services','Services',Layers3],['packages','Pricing & packages',Layers3],['activity','Activity feed',Activity],['inquiries','Enquiries',Mail],['reviews','Testimonials',Star],['assets','Media library',UploadCloud],['pageContent','Page content',FilePenLine],['users','Team & clients',Users],['settings','Site settings',Settings],['maintenance','Maintenance control',ShieldCheck]];
 const FIELDS={
@@ -20,7 +21,7 @@ async function api(path,method='GET',body,form=false){const response=await fetch
 function Tag({status}){const s=String(status||'draft');return <span className={'pill '+(['published','completed','approved'].includes(s)?'pill-success':['cancelled','rejected'].includes(s)?'pill-danger':'pill-accent')}>{s.replaceAll('_',' ')}</span>}
 function Field({field,value,onChange}){const [key,label,type='text',required=false]=field;const basic={id:'edit-'+key,name:key,value:value??'',onChange:e=>onChange(key,e.target.value),required};if(type==='checkbox')return <div className="field"><label htmlFor={'edit-'+key} className="hstack"><input type="checkbox" id={'edit-'+key} checked={!!value} onChange={e=>onChange(key,e.target.checked)} style={{width:'auto',minHeight:0}}/>{label}</label></div>;if(type==='textarea')return <div className="field span-all"><label htmlFor={'edit-'+key}>{label}</label><textarea {...basic} rows={key==='body'?6:3}/></div>;if(statuses[type])return <div className="field"><label htmlFor={'edit-'+key}>{label}</label><select {...basic}><option value="">Select...</option>{statuses[type].map(s=><option value={s} key={s}>{s.replaceAll('_',' ')}</option>)}</select></div>;return <div className="field"><label htmlFor={'edit-'+key}>{label}</label><input {...basic} type={type==='number'?'number':type==='url'?'text':'text'}/></div>}
 export default function StudioAdmin({user,initialTab='overview'}){
- const allowed=roleTab[user.role]||[],[tab,setTab]=useState(allowed.includes(initialTab)?initialTab:'overview'),[items,setItems]=useState({}),[analytics,setAnalytics]=useState(null),[alerts,setAlerts]=useState([]),[settings,setSettings]=useState(null),[loading,setLoading]=useState(false),[error,setError]=useState(''),[success,setSuccess]=useState(''),[edit,setEdit]=useState(null),[values,setValues]=useState({}),[uploading,setUploading]=useState(false),[order,setOrder]=useState(null),[messages,setMessages]=useState([]),[message,setMessage]=useState(''),[newUser,setNewUser]=useState({name:'',email:'',role:'designer',password:''});
+ const allowed=roleTab[user.role]||[],[tab,setTab]=useState(allowed.includes(initialTab)?initialTab:'overview'),[items,setItems]=useState({}),[analytics,setAnalytics]=useState(null),[alerts,setAlerts]=useState([]),[settings,setSettings]=useState(null),[loading,setLoading]=useState(false),[error,setError]=useState(''),[success,setSuccess]=useState(''),[edit,setEdit]=useState(null),[values,setValues]=useState({}),[uploading,setUploading]=useState(false),[order,setOrder]=useState(null),[messages,setMessages]=useState([]),[message,setMessage]=useState(''),[newUser,setNewUser]=useState({name:'',email:'',role:'designer',password:''}),[signingOut,setSigningOut]=useState(false);
  const load=useCallback(async (resource=tab)=>{
   setLoading(true);
   setError('');
@@ -62,7 +63,20 @@ export default function StudioAdmin({user,initialTab='overview'}){
  async function saveSettings(e){e.preventDefault();try{await api('/api/admin/settings','PATCH',settings);setSuccess('Public settings updated');await load('settings')}catch(e){setError(e.message)}}
  async function viewOrder(x){setOrder(x);setError('');try{setMessages((await api('/api/app/messages?commissionId='+x._id)).items)}catch(e){setError(e.message)}}
  async function sendMessage(e){e.preventDefault();if(!message.trim()||!order)return;try{await api('/api/app/messages','POST',{commissionId:order._id,body:message});setMessage('');setMessages((await api('/api/app/messages?commissionId='+order._id)).items)}catch(e){setError(e.message)}}
- return <><div className="dashboard-head"><div><span className="eyebrow">STUDIO OPERATIONS / {user.role.toUpperCase()}</span><h1>Command centre<span className="gradient-text">.</span></h1><p>Publishing, commissions and creative operations in one workspace.</p></div><span className="pill pill-success"><span className="presence-pulse"/> Signed in as {user.name}</span></div>
+  async function signOut(){
+    if(signingOut)return;
+    setSigningOut(true);
+    setError('');
+    try{
+      const response=await fetch('/api/auth/logout',{method:'POST',credentials:'same-origin',headers:{'Accept':'application/json'}});
+      if(!response.ok)throw new Error('Sign out failed. Please try again.');
+      window.location.replace('/login');
+    }catch(err){
+      setError(err.message||'Could not sign out. Please try again.');
+      setSigningOut(false);
+    }
+  }
+  return <><div className="dashboard-head"><div><span className="eyebrow">STUDIO OPERATIONS / {user.role.toUpperCase()}</span><h1>Command centre<span className="gradient-text">.</span></h1><p>Publishing, commissions and creative operations in one workspace.</p></div><div className={logoutStyles.accountActions}><span className="pill pill-success"><span className="presence-pulse"/> Signed in as {user.name}</span><button type="button" className={`icon-button ${logoutStyles.signOut}`} title={signingOut?'Signing out…':'Sign out'} aria-label={signingOut?'Signing out':'Sign out of Studio Admin'} disabled={signingOut} onClick={signOut}>{signingOut?<LoaderCircle size={18} className={logoutStyles.spinner} aria-hidden="true"/>:<LogOut size={18} aria-hidden="true"/>}</button></div></div>
  <div className="tabbar">{TABS.filter(([k])=>allowed.includes(k)).map(([k,t,Icon])=><button key={k} onClick={()=>changeTab(k)} className={'tab '+(tab===k?'active':'')}><Icon size={15}/>{t}</button>)}</div>
  {error&&<div className="surface" role="alert" style={{borderColor:'var(--danger)',marginBottom:15}}><p className="form-error" style={{margin:0}}>{error}</p></div>}
  {success&&<div className="surface" style={{borderColor:'var(--success)',marginBottom:15}}><p className="form-success" style={{margin:0}}>{success}</p></div>}
