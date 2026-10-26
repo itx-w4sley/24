@@ -12,6 +12,13 @@ async function main(){
     const indexes=[['users',{email:1}],['projects',{slug:1}],['news',{slug:1}],['services',{slug:1}]];
     for(const [coll,idx] of indexes)await db.collection(coll).createIndex(idx,{unique:true});
     await db.collection('rateLimits').createIndex({expiresAt:1},{expireAfterSeconds:0});await db.collection('analytics').createIndex({createdAt:1},{expireAfterSeconds:7776000});
+    await db.collection('sessions').createIndex({sid:1},{unique:true});
+    await db.collection('sessions').createIndex({expiresAt:1},{expireAfterSeconds:0});
+    await db.collection('quotes').createIndex({ownerId:1,createdAt:-1});
+    await db.collection('quotes').createIndex({assignedTo:1,createdAt:-1});
+    await db.collection('deliveries').createIndex({ownerId:1,createdAt:-1});
+    await db.collection('revisions').createIndex({ownerId:1,createdAt:-1});
+    await db.collection('tasks').createIndex({assigneeId:1,updatedAt:-1});
     await db.collection('commissions').createIndex({ownerId:1,createdAt:-1});await db.collection('messages').createIndex({commissionId:1,createdAt:1});
     for(const p of demoProjects){const {_id,...doc}=p;await db.collection('projects').updateOne({slug:p.slug},{$setOnInsert:{...doc,createdAt:new Date('2026-01-01'),updatedAt:new Date()}},{upsert:true});}
     for(const service of initialServices)await db.collection('services').updateOne({slug:service.slug},{$setOnInsert:{...service,status:'published',createdAt:new Date()}},{upsert:true});

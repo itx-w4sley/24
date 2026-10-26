@@ -186,3 +186,12 @@ html[data-effects='off'] .ambient,html[data-effects='off'] .grain{display:none}
 .hero-actions .button-discord:hover,.hero-actions .button-discord:focus-visible{border-color:#8994ff;background:linear-gradient(120deg,rgba(88,101,242,.29),rgba(88,101,242,.13));box-shadow:0 10px 25px rgba(88,101,242,.15);transform:translateY(-2px)}
 .hero-actions .button-discord:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media(max-width:450px){.hero-actions .button-discord{width:100%}}
+
+/* Studio 5.4.3 — accessible icon-only admin sign out */
+.admin-account-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0}
+.admin-sign-out{flex:0 0 38px;color:var(--muted);cursor:pointer}
+.admin-sign-out:hover:not(:disabled),.admin-sign-out:focus-visible{color:var(--danger);border-color:var(--danger);background:var(--panel)}
+.admin-sign-out:disabled{cursor:wait;opacity:.65}
+.admin-sign-out-spinner{animation:admin-sign-out-spin 1s linear infinite}
+@keyframes admin-sign-out-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.admin-sign-out-spinner{animation:none}}

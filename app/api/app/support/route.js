@@ -2,6 +2,7 @@ import {json,readJson,rateLimit,cleanText,failure,guard,audit} from '@/lib/api';
 import {getDb,serialize} from '@/lib/db';
 import {notifyStaff,notify} from '@/lib/notify';
 import {isStaff} from '@/lib/auth';
+import {sendStudioDiscord} from '@/lib/studio55-discord';
 const CATEGORIES=['Discord Bot','Discord Server','Bot Hosting','Website / App','Design / Branding','Account / Billing','Other'];
 const PRIORITIES=['low','normal','high'];
 export async function GET(req){try{
@@ -25,6 +26,7 @@ export async function POST(req){try{
   const id=String(result.insertedId);
   await audit(g.user,'create','supportTickets',{ticketId:id});
   await notifyStaff('New support ticket',`${g.user.name}: ${subject}`,'/admin?tab=tickets');
+  await sendStudioDiscord('support','New support ticket',`${g.user.name}: ${subject}`);
   await notify({userId:g.user._id,title:'Support ticket received',body:`Ticket #${id.slice(-8).toUpperCase()} — ${subject}`,link:'/support'});
   return json({ok:true,id,reference:'SUP-'+id.slice(-8).toUpperCase()},201);
 }catch(e){if(['PAYLOAD_TOO_LARGE','INVALID_JSON'].includes(e.message))return json({error:'Invalid request'},400);return failure(e);}}
