@@ -2,6 +2,7 @@
 
 import {useEffect,useState} from 'react';
 import Link from 'next/link';
+import {SERVICES56} from '@/lib/studio56';
 import {
   Bot,Server,Cloud,Globe2,PenTool,Camera,Shapes,ArrowRight,ArrowLeft,
   CheckCircle2,Send,ShieldCheck,Sparkles,Check,Layers3,CalendarDays,
@@ -76,6 +77,19 @@ export default function ProjectRequestWizard(){
   const [result,setResult]=useState(null);
   const [user,setUser]=useState(null);
   const [minDate,setMinDate]=useState('');
+  useEffect(()=>{
+    const params=new URLSearchParams(window.location.search);
+    if(params.get('builder')!=='beta')return;
+    const id=params.get('service');
+    const catalogue=SERVICES56.find(x=>x.id===id);
+    if(!catalogue)return;
+    const featureIndexes=(params.get('features')||'').split(',').filter(x=>/^\d{1,2}$/.test(x)).map(Number).filter(i=>i>=0&&i<catalogue.features.length);
+    const features=[...new Set(featureIndexes)].slice(0,12).map(i=>catalogue.features[i]);
+    let notes='';
+    try{notes=sessionStorage.getItem('studio56-package-notes')||'';sessionStorage.removeItem('studio56-package-notes')}catch{}
+    setValues(v=>({...v,type:catalogue.type,features,additionalFeatures:notes.slice(0,450)}));
+    setStep(1);
+  },[]);
   useEffect(()=>{
     setMinDate(dateToday());
     fetch('/api/auth/me').then(r=>r.json()).then(x=>{
